@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Navigation Compose App</string>
+    <string name="player_list">Player List</string>
+    <string name="player_details">Player Details</string>
+    <string name="dummy_data">Dummy Data</string>
+</resources>
