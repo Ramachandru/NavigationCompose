@@ -1,6 +1,7 @@
 package com.example.navigationcomposeapp.view
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,19 +9,29 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.navigationcomposeapp.CachedPlayerDetails
 import com.example.navigationcomposeapp.model.PlayerDetails
 import com.example.navigationcomposeapp.model.TennisPlayersState
 import com.example.navigationcomposeapp.viewmodel.PlayerListViewModel
+import java.util.*
 
 @Composable
 fun PlayersListItem(
@@ -29,7 +40,11 @@ fun PlayersListItem(
     iconTransformationBuilder: ImageRequest.Builder.() -> Unit = {}
 ) {
     Card(shape = RoundedCornerShape(20.dp),
-        backgroundColor = MaterialTheme.colors.surface,
+        backgroundColor = MaterialTheme.colors.secondaryVariant,
+        border = BorderStroke(
+            width = 2.dp,
+            color = Color.Gray
+        ),
         elevation = 2.dp,
         modifier = Modifier
             .fillMaxWidth()
@@ -42,17 +57,47 @@ fun PlayersListItem(
             Box(modifier = Modifier.align(alignment = Alignment.CenterVertically)) {
                 LoadImagesRes(content.imgURL, iconTransformationBuilder)
             }
-            Column(
+            DesignTextWithFormat(
+                Triple(content.name, content.country, content.city),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(10.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = content.name)
-                Text(text = content.country)
-            }
+                    .padding(10.dp)
+                    .align(Alignment.CenterVertically)
+            )
         }
+    }
+}
+
+@Composable
+fun DesignTextWithFormat(
+    tribleData: Triple<String, String, String>,
+    modifier: Modifier,
+    onClickedTxt: (String) -> Unit = {}
+) {
+    Column(
+        modifier = modifier.clickable {
+            onClickedTxt(tribleData.third)
+        },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = tribleData.first,
+            textAlign = TextAlign.Center,
+            style = TextStyle(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+        )
+        Text(
+            text = tribleData.second,
+            textAlign = TextAlign.Center,
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.LightGray,
+            ), modifier = Modifier.padding(top = 10.dp)
+        )
     }
 }
 
@@ -66,7 +111,7 @@ fun LoadImagesRes(imgUrl: String, iconTransformationBuilder: ImageRequest.Builde
         modifier = Modifier
             .size(90.dp)
             .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-            .clip(RoundedCornerShape(10.dp)),
+            .clip(RoundedCornerShape(50.dp)),
         contentDescription = "image loading"
     )
 }
@@ -83,7 +128,7 @@ fun PlayersListData(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxSize()
             ) {
-                CircularProgressIndicator(modifier = Modifier.size(100.dp))
+                CircularProgressIndicator(modifier = Modifier.size(100.dp), color = Color.Magenta)
             }
         }
         is TennisPlayersState.SUCCESS -> {
@@ -101,11 +146,46 @@ fun PlayersListData(
             }
         }
     }
-
 }
 
 @Composable
-fun IndividualPlayesData(outputData: String, onClickedTxt: (inpiut: String) -> Unit) {
+fun PlayersListDataWithAppBar(
+    openDrawer: () -> Unit,
+    onNavigateToPlayersData: (data: String) -> Unit
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        CreateAppBar(title = "Player List", iconImage = Icons.Filled.Menu) {
+            openDrawer()
+        }
+        PlayersListData(onNavigateToPlayersData = onNavigateToPlayersData)
+    }
+}
+
+@Composable
+fun IndividualPlayerWithAppBar(
+    navController: NavController,
+    onClickedTxt: (inpiut: String) -> Unit
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        CreateAppBar(title = "Player Details", iconImage = Icons.Filled.ArrowBack) {
+            navController.popBackStack()
+        }
+        IndividualPlayesData(onClickedTxt = onClickedTxt)
+    }
+}
+
+@Composable
+fun DummyDataWithAppBar(navController: NavController, outputData: String) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        CreateAppBar(title = "Dummy Data", iconImage = Icons.Filled.ArrowBack) {
+            navController.popBackStack()
+        }
+    }
+    DummyDataScreen(outputData)
+}
+
+@Composable
+fun IndividualPlayesData(onClickedTxt: (inpiut: String) -> Unit) {
     val content = CachedPlayerDetails.getPlayersDetailsInCache()
     Card(
         modifier = Modifier
@@ -116,8 +196,12 @@ fun IndividualPlayesData(outputData: String, onClickedTxt: (inpiut: String) -> U
                 bottom = 16.dp,
                 end = 16.dp
             ),
+        border = BorderStroke(
+            width = 2.dp,
+            color = Color.Black
+        ),
         shape = RoundedCornerShape(20.dp),
-        backgroundColor = MaterialTheme.colors.primary
+        backgroundColor = MaterialTheme.colors.secondaryVariant
     ) {
         Column(
             modifier = Modifier
@@ -126,14 +210,15 @@ fun IndividualPlayesData(outputData: String, onClickedTxt: (inpiut: String) -> U
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = outputData)
+            Text(text = content.name, style = TextStyle())
             PlacePlayerImage(content.imgURL)
-
-            Text(
-                text = content.country,
-                modifier = Modifier.clickable { onClickedTxt(content.name) }
+            DesignTextWithFormat(
+                Triple(content.country, content.city, content.name),
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(10.dp),
+                onClickedTxt
             )
-            Text(text = content.city)
         }
     }
 }
@@ -155,6 +240,42 @@ fun PlacePlayerImage(playerImg: String, IconTransform: ImageRequest.Builder.() -
 }
 
 @Composable
+fun ProfileScreen(navController: NavController) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        CreateAppBar(title = "Profile", iconImage = Icons.Filled.ArrowBack) {
+            navController.popBackStack()
+        }
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Profile : $ App"
+            )
+        }
+    }
+}
+
+@Composable
+fun AboutScreen(navController: NavController) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        CreateAppBar(title = "About", iconImage = Icons.Filled.ArrowBack) {
+            navController.popBackStack()
+        }
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "About : $ App"
+            )
+        }
+    }
+}
+
+@Composable
 fun DummyDataScreen(outputData: String) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -162,7 +283,17 @@ fun DummyDataScreen(outputData: String) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Year : $outputData"
+            text = "Player : $outputData"
         )
     }
+}
+
+fun getCoutriesList(): Map<String, String> {
+    var countriesMap = hashMapOf<String, String>()
+    val countires = Locale.getISOCountries()
+    countires.forEach {
+        val locale = Locale("", it)
+        countriesMap[locale.country.lowercase(Locale.getDefault())] = locale.displayCountry
+    }
+    return countriesMap.toList().sortedBy { (_, value) -> value }.toMap()
 }
