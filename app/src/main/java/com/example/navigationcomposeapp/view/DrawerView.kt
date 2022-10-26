@@ -9,13 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.navigationcomposeapp.model.OtherScreen
+import com.example.navigationcomposeapp.model.AboutRoute
+import com.example.navigationcomposeapp.model.ProfileRoute
 import com.example.navigationcomposeapp.model.Screen
 
 val Screens = listOf<String>(
     Screen.Players.Page,
-    OtherScreen.Profile.Page,
-    OtherScreen.About.Page
+    ProfileRoute.Profile.page,
+    AboutRoute.About.Page
 )
 
 @Composable

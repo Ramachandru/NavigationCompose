@@ -240,7 +240,7 @@ fun PlacePlayerImage(playerImg: String, IconTransform: ImageRequest.Builder.() -
 }
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(navController: NavController, onClickNavigate: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         CreateAppBar(title = "Profile", iconImage = Icons.Filled.ArrowBack) {
             navController.popBackStack()
@@ -251,8 +251,26 @@ fun ProfileScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Profile : $ App"
+                text = "Profile : $ App", modifier = Modifier.clickable {
+                    onClickNavigate()
+                }
             )
+        }
+    }
+}
+
+@Composable
+fun ProfileSubScreen(navController: NavController) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        CreateAppBar(title = "Profile-Sub", iconImage = Icons.Filled.ArrowBack) {
+            navController.popBackStack()
+        }
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Profile-Sub : APP")
         }
     }
 }

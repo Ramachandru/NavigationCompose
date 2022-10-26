@@ -28,8 +28,10 @@ sealed class MainRoute(val route: String) {
     object ProfileScreen : MainRoute("profile")
     object AboutScreen : MainRoute("about")
 }
-
-sealed class OtherScreen(val Page: String) {
-    object Profile : OtherScreen("Profile")
-    object About : OtherScreen("About")
+sealed class ProfileRoute(val page : String){
+    object Profile : ProfileRoute("Profile")
+    object ProfileSub : ProfileRoute("Profile-Sub")
+}
+sealed class AboutRoute(val Page: String) {
+    object About : AboutRoute("About")
 }

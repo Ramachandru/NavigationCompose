@@ -2,10 +2,7 @@ package com.example.navigationcomposeapp.view
 
 import androidx.navigation.*
 import androidx.navigation.compose.composable
-import com.example.navigationcomposeapp.model.MainRoute
-import com.example.navigationcomposeapp.model.NavigationKey
-import com.example.navigationcomposeapp.model.OtherScreen
-import com.example.navigationcomposeapp.model.Screen
+import com.example.navigationcomposeapp.model.*
 
 fun NavGraphBuilder.playersData(navController: NavController, openDrawer: () -> Unit) {
     composable(Screen.Players.Page) {
@@ -40,10 +37,15 @@ fun NavGraphBuilder.playersData(navController: NavController, openDrawer: () -> 
 fun NavGraphBuilder.profileSetUp(navController: NavController) {
     navigation(
         route = MainRoute.ProfileScreen.route,
-        startDestination = OtherScreen.Profile.Page
+        startDestination = ProfileRoute.Profile.page
     ) {
-        composable(OtherScreen.Profile.Page) {
-            ProfileScreen(navController = navController)
+        composable(ProfileRoute.Profile.page) {
+            ProfileScreen(navController = navController) {
+                navController.navigate(ProfileRoute.ProfileSub.page)
+            }
+        }
+        composable(ProfileRoute.ProfileSub.page) {
+            ProfileSubScreen(navController)
         }
     }
 }
@@ -51,9 +53,9 @@ fun NavGraphBuilder.profileSetUp(navController: NavController) {
 fun NavGraphBuilder.aboutApp(navController: NavController) {
     navigation(
         route = MainRoute.AboutScreen.route,
-        startDestination = OtherScreen.About.Page
+        startDestination = AboutRoute.About.Page
     ) {
-        composable(OtherScreen.About.Page) {
+        composable(AboutRoute.About.Page) {
             AboutScreen(navController = navController)
         }
     }
