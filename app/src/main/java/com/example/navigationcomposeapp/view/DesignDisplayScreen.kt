@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -124,12 +127,7 @@ fun PlayersListData(
     val uiState = viewModel.playerData.collectAsState().value
     when (uiState) {
         is TennisPlayersState.LOADING -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                CircularProgressIndicator(modifier = Modifier.size(100.dp), color = Color.Magenta)
-            }
+            LoadingIndicator()
         }
         is TennisPlayersState.SUCCESS -> {
             Surface(modifier = Modifier.fillMaxSize()) {
@@ -141,9 +139,7 @@ fun PlayersListData(
             }
         }
         is TennisPlayersState.ERROR -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Something went wrong :${uiState.errorMsg}")
-            }
+            ShowingErrorCode(errorMsg = uiState.errorMsg)
         }
     }
 }
@@ -240,7 +236,7 @@ fun PlacePlayerImage(playerImg: String, IconTransform: ImageRequest.Builder.() -
 }
 
 @Composable
-fun ProfileScreen(navController: NavController, onClickNavigate: () -> Unit) {
+fun ProfileScreen(navController: NavController, onClickNavigate: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         CreateAppBar(title = "Profile", iconImage = Icons.Filled.ArrowBack) {
             navController.popBackStack()
@@ -250,17 +246,13 @@ fun ProfileScreen(navController: NavController, onClickNavigate: () -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Profile : $ App", modifier = Modifier.clickable {
-                    onClickNavigate()
-                }
-            )
+            ProfileScreenDesign(onClickNavigate)
         }
     }
 }
 
 @Composable
-fun ProfileSubScreen(navController: NavController) {
+fun ProfileSubScreen(navController: NavController, data: String) {
     Column(modifier = Modifier.fillMaxSize()) {
         CreateAppBar(title = "Profile-Sub", iconImage = Icons.Filled.ArrowBack) {
             navController.popBackStack()
@@ -270,7 +262,7 @@ fun ProfileSubScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Profile-Sub : APP")
+            Text("Profile-Sub : $data")
         }
     }
 }

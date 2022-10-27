@@ -41,11 +41,19 @@ fun NavGraphBuilder.profileSetUp(navController: NavController) {
     ) {
         composable(ProfileRoute.Profile.page) {
             ProfileScreen(navController = navController) {
-                navController.navigate(ProfileRoute.ProfileSub.page)
+                navController.navigate(ProfileRoute.ProfileSub.page + "/$it")
             }
         }
-        composable(ProfileRoute.ProfileSub.page) {
-            ProfileSubScreen(navController)
+        composable(
+            ProfileRoute.ProfileSub.page + NavigationKey.PROFILE_DATA,
+            arguments = listOf(navArgument(NavigationKey.PROFILE_DATA_ARGUMENT) {
+                type = NavType.StringType
+            })
+        ) {
+            ProfileSubScreen(
+                navController,
+                it.arguments!!.getString(NavigationKey.PROFILE_DATA_ARGUMENT)!!
+            )
         }
     }
 }

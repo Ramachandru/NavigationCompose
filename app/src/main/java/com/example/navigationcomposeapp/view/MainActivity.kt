@@ -4,14 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -82,23 +79,6 @@ fun DesignDrawer() {
             )
         }
     }
-}
-
-@Composable
-fun CreateAppBar(title: String, iconImage: ImageVector, onBtnClicked: () -> Unit) {
-    TopAppBar(
-        navigationIcon = {
-            IconButton(onClick = onBtnClicked) {
-                Icon(
-                    imageVector = iconImage,
-                    modifier = Modifier.padding(horizontal = 12.dp),
-                    contentDescription = "Action Home"
-                )
-            }
-        },
-        title = { Text(title) },
-        backgroundColor = MaterialTheme.colors.primary
-    )
 }
 
 @Composable

@@ -8,6 +8,8 @@ object NavigationKey {
     const val PLAYER_DATA: String = "/{userdata}"
     const val DUMMY_DATA_ARGUMENT = "dummy"
     const val DUMMY_DATA = "/{dummy}"
+    const val PROFILE_DATA_ARGUMENT = "profiledata"
+    const val PROFILE_DATA = "/{profiledata}"
 }
 
 //State of Content Loading
@@ -28,10 +30,12 @@ sealed class MainRoute(val route: String) {
     object ProfileScreen : MainRoute("profile")
     object AboutScreen : MainRoute("about")
 }
-sealed class ProfileRoute(val page : String){
+
+sealed class ProfileRoute(val page: String) {
     object Profile : ProfileRoute("Profile")
     object ProfileSub : ProfileRoute("Profile-Sub")
 }
+
 sealed class AboutRoute(val Page: String) {
     object About : AboutRoute("About")
 }
