@@ -12,6 +12,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +31,8 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -57,11 +60,15 @@ fun HorizontalPagerDesign(
     profileList: List<PlayerDetails>,
     onClickedData: (String) -> Unit
 ) {
-    HorizontalPager(count = profileList.size, state = pagerState) { page ->
+    val scope = rememberCoroutineScope()
+    HorizontalPager(
+        count = profileList.size, state = pagerState,
+        itemSpacing = -60.dp
+    ) { page ->
         CardDesign(profileList.get(page), onClickedData)
     }
     Spacer(modifier = Modifier.height(10.dp))
-    DotIndication(pagerState.currentPage, profileList.size)
+    DotIndication(profileList.size, pagerState, scope)
 }
 
 @Composable
@@ -77,7 +84,7 @@ fun CardDesign(
             .clickable {
                 onClickedData(playerDetails.name)
             }
-            .padding(all = 20.dp),
+            .padding(all = 40.dp),
         elevation = 2.dp,
         shape = RoundedCornerShape(20.dp),
         border = BorderStroke(3.dp, Color.Gray)
@@ -113,8 +120,14 @@ fun CardDesign(
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun DotIndication(selectedPosition: Int, totalCount: Int) {
+fun DotIndication(
+    totalCount: Int,
+    pagerState: PagerState,
+    scope: CoroutineScope
+) {
+    val selectedPosition = pagerState.currentPage
     LazyRow(
         modifier = Modifier
             .wrapContentWidth()
@@ -127,6 +140,9 @@ fun DotIndication(selectedPosition: Int, totalCount: Int) {
                         .size(10.dp)
                         .clip(CircleShape)
                         .background(Color.Red)
+                        .clickable {
+                            //nothing implemented
+                        }
                 )
             } else {
                 Box(
@@ -134,6 +150,11 @@ fun DotIndication(selectedPosition: Int, totalCount: Int) {
                         .size(10.dp)
                         .clip(CircleShape)
                         .background(Color.Gray)
+                        .clickable {
+                            scope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        }
                 )
             }
             if (index != totalCount - 1) {
