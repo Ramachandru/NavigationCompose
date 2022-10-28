@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.example.navigationcomposeapp.CachedPlayerDetails
 import com.example.navigationcomposeapp.model.PlayerDetails
 import com.example.navigationcomposeapp.model.TennisPlayersState
 import com.example.navigationcomposeapp.viewmodel.PlayerListViewModel
@@ -65,7 +67,9 @@ fun HorizontalPagerDesign(
         count = profileList.size, state = pagerState,
         itemSpacing = -60.dp
     ) { page ->
-        CardDesign(profileList.get(page), onClickedData)
+        val player = profileList.get(page)
+        CachedPlayerDetails.setPlayersDetailsInCache(player)
+        CardDesign(player, onClickedData)
     }
     Spacer(modifier = Modifier.height(10.dp))
     DotIndication(profileList.size, pagerState, scope)
@@ -161,5 +165,43 @@ fun DotIndication(
                 Spacer(modifier = Modifier.padding(3.dp))
             }
         }
+    }
+}
+
+@Composable
+fun ProfileSubCardDesign() {
+    val playerDetails: PlayerDetails = CachedPlayerDetails.getPlayersDetailsInCache()
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(all = 10.dp)
+    ) {
+        Image(
+            painter = rememberImagePainter(playerDetails.imgURL),
+            contentDescription = "load",
+            modifier = Modifier
+                .width(400.dp)
+                .height(200.dp), contentScale = ContentScale.FillBounds
+        )
+        Text(
+            text = playerDetails.name,
+            style = TextStyle(
+                fontSize = 18.sp, fontWeight = FontWeight.ExtraBold,
+                color = Color.Black
+            ),
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(all = 10.dp)
+        )
+        Text(
+            text = playerDetails.country,
+            style = TextStyle(
+                fontSize = 18.sp, fontWeight = FontWeight.Bold,
+                color = Color.Black
+            ),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(all = 10.dp)
+        )
     }
 }
