@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ProfileScreenDesign(onClickedData: (String) -> Unit) {
+fun ProfileScreenDesign(position: Int, onClickedData: (String) -> Unit = {}) {
     val pagerState = rememberPagerState()
     val profileViewModel: PlayerListViewModel = hiltViewModel()
     val profileUiState = profileViewModel.playerData.collectAsState().value
@@ -47,7 +47,7 @@ fun ProfileScreenDesign(onClickedData: (String) -> Unit) {
             LoadingIndicator()
         }
         is TennisPlayersState.SUCCESS -> {
-            HorizontalPagerDesign(pagerState, profileUiState.playersList, onClickedData)
+            HorizontalPagerDesign(position, pagerState, profileUiState.playersList, onClickedData)
         }
         is TennisPlayersState.ERROR -> {
             ShowingErrorCode(errorMsg = profileUiState.errorMsg)
@@ -58,17 +58,21 @@ fun ProfileScreenDesign(onClickedData: (String) -> Unit) {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HorizontalPagerDesign(
+    position: Int,
     pagerState: PagerState,
     profileList: List<PlayerDetails>,
     onClickedData: (String) -> Unit
 ) {
+    if (position == 2) {
+        DesignTabHost(profileList)
+        return
+    }
     val scope = rememberCoroutineScope()
     HorizontalPager(
         count = profileList.size, state = pagerState,
         itemSpacing = -60.dp
     ) { page ->
         val player = profileList.get(page)
-        CachedPlayerDetails.setPlayersDetailsInCache(player)
         CardDesign(player, onClickedData)
     }
     Spacer(modifier = Modifier.height(10.dp))
@@ -86,6 +90,7 @@ fun CardDesign(
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable {
+                CachedPlayerDetails.setPlayersDetailsInCache(playerDetails)
                 onClickedData(playerDetails.name)
             }
             .padding(all = 40.dp),
@@ -187,21 +192,21 @@ fun ProfileSubCardDesign() {
             text = playerDetails.name,
             style = TextStyle(
                 fontSize = 18.sp, fontWeight = FontWeight.ExtraBold,
-                color = Color.Black
+                color = Color.Black, background = Color.White
             ),
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(all = 10.dp)
+                .padding(all = 8.dp)
         )
         Text(
             text = playerDetails.country,
             style = TextStyle(
                 fontSize = 18.sp, fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = Color.Black, background = Color.White
             ),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(all = 10.dp)
+                .padding(all = 8.dp)
         )
     }
 }

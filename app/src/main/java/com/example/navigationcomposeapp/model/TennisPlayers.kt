@@ -39,3 +39,8 @@ sealed class ProfileRoute(val page: String) {
 sealed class AboutRoute(val Page: String) {
     object About : AboutRoute("About")
 }
+
+sealed class GenderPlayer(val gender: String, val index: Int) {
+    object GentsPlayer : GenderPlayer("GENTS", 1)
+    object LadiesPlayer : GenderPlayer("LADIES", 2)
+}

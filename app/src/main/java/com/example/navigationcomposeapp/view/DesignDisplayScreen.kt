@@ -40,7 +40,7 @@ import java.util.*
 @Composable
 fun PlayersListItem(
     content: PlayerDetails,
-    onNavigateToPlayersData: (data: String) -> Unit,
+    onNavigateToPlayersData: (data: String) -> Unit = {},
     iconTransformationBuilder: ImageRequest.Builder.() -> Unit = {}
 ) {
     Card(shape = RoundedCornerShape(20.dp),
@@ -247,7 +247,7 @@ fun ProfileScreen(navController: NavController, onClickNavigate: (String) -> Uni
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProfileScreenDesign(onClickNavigate)
+            ProfileScreenDesign(1, onClickNavigate)
         }
     }
 }
@@ -274,15 +274,7 @@ fun AboutScreen(navController: NavController) {
         CreateAppBar(title = "About", iconImage = Icons.Filled.ArrowBack) {
             navController.popBackStack()
         }
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "About : $ App"
-            )
-        }
+        ProfileScreenDesign(2)
     }
 }
 
