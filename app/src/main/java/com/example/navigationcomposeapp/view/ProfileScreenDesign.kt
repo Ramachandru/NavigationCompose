@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -64,15 +65,21 @@ fun HorizontalPagerDesign(
     onClickedData: (String) -> Unit
 ) {
     if (position == 2) {
-        DesignTabHost(profileList,onClickedData)
+        DesignTabHost(profileList, onClickedData)
         return
     }
     val scope = rememberCoroutineScope()
+    var totCount: Int = 50;
+    var screenIndex: Int = 0;
     HorizontalPager(
-        count = profileList.size, state = pagerState,
+        count = totCount, state = pagerState,
         itemSpacing = -60.dp
     ) { page ->
-        val player = profileList.get(page)
+        screenIndex = page
+        if (screenIndex >= profileList.size) {
+            screenIndex %= profileList.size
+        }
+        val player = profileList.get(screenIndex)
         CardDesign(player, onClickedData)
     }
     Spacer(modifier = Modifier.height(10.dp))
@@ -137,17 +144,23 @@ fun DotIndication(
     scope: CoroutineScope
 ) {
     val selectedPosition = pagerState.currentPage
+    var indicatorIndex: Int = selectedPosition
+
     LazyRow(
         modifier = Modifier
             .wrapContentWidth()
             .wrapContentHeight()
     ) {
         items(totalCount) { index ->
-            if (selectedPosition == index) {
+            if (indicatorIndex >= totalCount) {
+                indicatorIndex %= totalCount
+            }
+            if (indicatorIndex == index) {
                 Box(
                     modifier = Modifier
-                        .size(10.dp)
-                        .clip(CircleShape)
+                        .width(20.dp)
+                        .height(10.dp)
+                        .clip(shape = CircleShape)
                         .background(Color.Red)
                         .clickable {
                             //nothing implemented
