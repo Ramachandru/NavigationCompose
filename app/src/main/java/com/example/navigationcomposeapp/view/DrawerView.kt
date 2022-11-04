@@ -1,14 +1,20 @@
 package com.example.navigationcomposeapp.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.navigationcomposeapp.model.AboutRoute
 import com.example.navigationcomposeapp.model.ProfileRoute
 import com.example.navigationcomposeapp.model.Screen
@@ -21,30 +27,58 @@ val Screens = listOf<String>(
 
 @Composable
 fun Drawer(onNavigationFromDrwer: (String) -> Unit) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.LightGray)
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(),
+            elevation = 2.dp,
+            backgroundColor = MaterialTheme.colors.primary,
+        ) {
+            Text(
+                text = "Categories",
+                textAlign = TextAlign.Start,
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                ), modifier = Modifier
+                    .padding(all = 16.dp)
+            )
+        }
         Column(
             modifier = Modifier
                 .wrapContentSize()
+                .padding(top = 20.dp)
         ) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                elevation = 2.dp,
-                backgroundColor = Color.LightGray
-            ) {
-                Text(text = "")
-            }
             Screens.forEach { screen ->
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = screen,
-                    style = MaterialTheme.typography.h6,
+                Spacer(modifier = Modifier.height(20.dp))
+                Card(
                     modifier = Modifier
-                        .padding(all = 8.dp)
-                        .clickable {
-                            onNavigationFromDrwer(screen)
-                        })
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    elevation = 2.dp,
+                    backgroundColor = MaterialTheme.colors.secondaryVariant,
+                    shape = RoundedCornerShape(20.dp)
+                ) {
+                    Text(
+                        text = screen,
+                        textAlign = TextAlign.Center,
+                        style = TextStyle(
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier
+                            .padding(all = 16.dp)
+                            .clickable {
+                                onNavigationFromDrwer(screen)
+                            })
+                }
+
             }
         }
     }
