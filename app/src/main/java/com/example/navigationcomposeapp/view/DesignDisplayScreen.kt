@@ -269,12 +269,12 @@ fun ProfileSubScreen(navController: NavController, data: String) {
 }
 
 @Composable
-fun AboutScreen(navController: NavController) {
+fun AboutScreen(navController: NavController, OnNavigateToIndividual: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         CreateAppBar(title = "About", iconImage = Icons.Filled.ArrowBack) {
             navController.popBackStack()
         }
-        ProfileScreenDesign(2)
+        ProfileScreenDesign(2, OnNavigateToIndividual)
     }
 }
 

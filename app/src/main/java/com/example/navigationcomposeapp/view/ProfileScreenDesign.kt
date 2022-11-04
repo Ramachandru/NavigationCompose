@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ProfileScreenDesign(position: Int, onClickedData: (String) -> Unit = {}) {
+fun ProfileScreenDesign(position: Int, onClickedData: (String) -> Unit) {
     val pagerState = rememberPagerState()
     val profileViewModel: PlayerListViewModel = hiltViewModel()
     val profileUiState = profileViewModel.playerData.collectAsState().value
@@ -64,7 +64,7 @@ fun HorizontalPagerDesign(
     onClickedData: (String) -> Unit
 ) {
     if (position == 2) {
-        DesignTabHost(profileList)
+        DesignTabHost(profileList,onClickedData)
         return
     }
     val scope = rememberCoroutineScope()

@@ -14,18 +14,18 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun DesignTabHost(profileList: List<PlayerDetails>) {
+fun DesignTabHost(profileList: List<PlayerDetails>, onClickedData: (String) -> Unit) {
     val pager = rememberPagerState()
     val genderList = listOf(GenderPlayer.GentsPlayer, GenderPlayer.LadiesPlayer)
     DesignTabs(pagerState = pager, tabs = genderList)
-    TabContent(pagerState = pager, tabs = genderList, profileList)
+    TabContent(pagerState = pager, tabs = genderList, profileList, onClickedData)
 }
 
 @Composable
-fun LoadingTabsContent(gentsList: List<PlayerDetails>) {
+fun LoadingTabsContent(gentsList: List<PlayerDetails>, onClickedData: (String) -> Unit) {
     LazyColumn {
         itemsIndexed(gentsList) { index, item ->
-            PlayersListItem(content = item)
+            PlayersListItem(content = item, onClickedData)
         }
     }
 }
@@ -54,16 +54,21 @@ fun DesignTabs(pagerState: PagerState, tabs: List<GenderPlayer>) {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabContent(pagerState: PagerState, tabs: List<GenderPlayer>, genderList: List<PlayerDetails>) {
+fun TabContent(
+    pagerState: PagerState,
+    tabs: List<GenderPlayer>,
+    genderList: List<PlayerDetails>,
+    onClickedData: (String) -> Unit
+) {
     val gentsList = genderList.subList(0, (genderList.size + 1) / 2)
     val ladiesList = genderList.subList((genderList.size + 1) / 2, genderList.size)
     HorizontalPager(count = tabs.size, state = pagerState) { page ->
         when (page) {
             0 -> {
-                LoadingTabsContent(gentsList)
+                LoadingTabsContent(gentsList, onClickedData)
             }
             1 -> {
-                LoadingTabsContent(ladiesList)
+                LoadingTabsContent(ladiesList, onClickedData)
             }
         }
     }

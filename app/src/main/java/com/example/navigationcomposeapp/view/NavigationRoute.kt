@@ -64,7 +64,9 @@ fun NavGraphBuilder.aboutApp(navController: NavController) {
         startDestination = AboutRoute.About.Page
     ) {
         composable(AboutRoute.About.Page) {
-            AboutScreen(navController = navController)
+            AboutScreen(navController = navController) {
+                navController.navigate(Screen.IndividualPlayer.Page + "/$it")
+            }
         }
     }
 }
