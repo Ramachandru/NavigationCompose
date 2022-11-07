@@ -1,12 +1,11 @@
 package com.example.navigationcomposeapp.view
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -21,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -230,7 +228,8 @@ fun PlacePlayerImage(playerImg: String, IconTransform: ImageRequest.Builder.() -
             ),
             modifier = Modifier
                 .size(300.dp)
-                .padding(top = 20.dp, bottom = 20.dp),
+                .padding(top = 20.dp, bottom = 20.dp)
+                .clip(CircleShape),
             contentDescription = "loading Player Image"
         )
     }
@@ -242,13 +241,7 @@ fun ProfileScreen(navController: NavController, onClickNavigate: (String) -> Uni
         CreateAppBar(title = "Profile", iconImage = Icons.Filled.ArrowBack) {
             navController.popBackStack()
         }
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ProfileScreenDesign(1, onClickNavigate)
-        }
+        ProfileScreenDesign(1, onClickNavigate)
     }
 }
 

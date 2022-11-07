@@ -1,5 +1,6 @@
 package com.example.navigationcomposeapp.view
 
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
@@ -7,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.example.navigationcomposeapp.model.GenderPlayer
 import com.example.navigationcomposeapp.model.PlayerDetails
 import com.google.accompanist.pager.*
@@ -14,11 +16,20 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun DesignTabHost(profileList: List<PlayerDetails>, onClickedData: (String) -> Unit) {
+fun DesignTabHost(
+    profileList: List<PlayerDetails>,
+    onClickedData: (String) -> Unit
+) {
     val pager = rememberPagerState()
     val genderList = listOf(GenderPlayer.GentsPlayer, GenderPlayer.LadiesPlayer)
-    DesignTabs(pagerState = pager, tabs = genderList)
-    TabContent(pagerState = pager, tabs = genderList, profileList, onClickedData)
+    Column(modifier = Modifier.height(500.dp)) {
+        DesignTabs(pagerState = pager, tabs = genderList)
+        TabContent(
+            pagerState = pager, tabs = genderList,
+            profileList,
+            onClickedData
+        )
+    }
 }
 
 @Composable

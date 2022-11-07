@@ -1,10 +1,8 @@
 package com.example.navigationcomposeapp.view
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -48,7 +45,12 @@ fun ProfileScreenDesign(position: Int, onClickedData: (String) -> Unit) {
             LoadingIndicator()
         }
         is TennisPlayersState.SUCCESS -> {
-            HorizontalPagerDesign(position, pagerState, profileUiState.playersList, onClickedData)
+            ModularizeProfileAndGender(
+                position,
+                pagerState,
+                profileUiState.playersList,
+                onClickedData
+            )
         }
         is TennisPlayersState.ERROR -> {
             ShowingErrorCode(errorMsg = profileUiState.errorMsg)
@@ -58,7 +60,7 @@ fun ProfileScreenDesign(position: Int, onClickedData: (String) -> Unit) {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun HorizontalPagerDesign(
+fun ModularizeProfileAndGender(
     position: Int,
     pagerState: PagerState,
     profileList: List<PlayerDetails>,
@@ -68,8 +70,25 @@ fun HorizontalPagerDesign(
         DesignTabHost(profileList, onClickedData)
         return
     }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        HorizontalPagerDesign(pagerState, profileList, onClickedData)
+        DesignTabHost(profileList, onClickedData)
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun HorizontalPagerDesign(
+    pagerState: PagerState,
+    profileList: List<PlayerDetails>,
+    onClickedData: (String) -> Unit
+) {
     val scope = rememberCoroutineScope()
-    var totCount: Int = 50;
+    val totCount: Int = 50;
     var screenIndex: Int = 0;
     HorizontalPager(
         count = totCount, state = pagerState,
@@ -83,7 +102,15 @@ fun HorizontalPagerDesign(
         CardDesign(player, onClickedData)
     }
     Spacer(modifier = Modifier.height(10.dp))
-    DotIndication(profileList.size, pagerState, scope)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        DotIndication(profileList.size, pagerState, scope)
+    }
 }
 
 @Composable
@@ -158,8 +185,8 @@ fun DotIndication(
             if (indicatorIndex == index) {
                 Box(
                     modifier = Modifier
-                        .width(20.dp)
-                        .height(10.dp)
+                        .width(24.dp)
+                        .height(12.dp)
                         .clip(shape = CircleShape)
                         .background(Color.Red)
                         .clickable {
@@ -169,7 +196,7 @@ fun DotIndication(
             } else {
                 Box(
                     modifier = Modifier
-                        .size(10.dp)
+                        .size(12.dp)
                         .clip(CircleShape)
                         .background(Color.Gray)
                         .clickable {
