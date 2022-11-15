@@ -126,7 +126,7 @@ fun PlayersListData(
     val uiState = viewModel.playerData.collectAsState().value
     when (uiState) {
         is TennisPlayersState.LOADING -> {
-            LoadingIndicator()
+            CustomProgressIndicator()
         }
         is TennisPlayersState.SUCCESS -> {
             Surface(modifier = Modifier.fillMaxSize()) {
